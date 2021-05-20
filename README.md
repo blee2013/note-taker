@@ -12,11 +12,11 @@ This is an application that can be used to write and save notes.
 ### Application
 
  
- Github: (https://github.com/blee2013/Social-Network-API)
+ Github: (https://github.com/blee2013/note-taker)
 
  Deployed at: 
  
- ![Preview ](/assets/team-profile-sample.png)
+ ![Preview ](public/assets/images/welcome.png)
 
 
 ### Technology Used
