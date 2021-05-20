@@ -1,64 +1,65 @@
-const fs = require("fs");
-const notesData = require("../db/db.json");
+
+const fs = require('fs');
+
 
 module.exports = function (app) {
 
-
-function writeToDB(notes) {
-    notes = JSON.stringify(notes);
-    console.log(notes);
-    fs.writeFileSync("./db/db.json", notes, function (err) {
-        if (err) {
-            return console.log(err);
-        }
+    //GET
+    app.get('/api/notes', function (req, res) {
+        fs.readFile('./db/db.json', (err, data) => {
+            if (err) throw err;
+            dbData = JSON.parse(data);
+            res.send(dbData);
+        });
     });
-}
-
-//GET
-app.get("/api/notes", function (req, res) {
-    res.json(notesData);
-});
-
-// POST 
-app.post("/api/notes", function (req, res) {
-
-    if (notesData.length == 0) {
-        req.body.id = "0";
-    } else {
-        req.body.id = JSON.stringify(JSON.parse(notesData[notesData.length - 1].id) + 1);
-    }
-
-    console.log("req.body.id: " + req.body.id);
 
     
-    notesData.push(req.body);
+    //POST
+    app.post('/api/notes', function (req, res) {
+        const userNotes = req.body;
 
-    writeToDB(notesData);
-    console.log(notesData);
+        fs.readFile('./db/db.json', (err, data) => {
+            if (err) throw err;
+            dbData = JSON.parse(data);
+            dbData.push(userNotes);
+            let number = 1;
+            dbData.forEach((note, index) => {
+                note.id = number;
+                number++;
+                return dbData;
+            });
+            console.log(dbData);
 
-    
-    res.json(req.body);
-});
+            stringData = JSON.stringify(dbData);
 
-// DELETE 
-app.delete("/api/notes/:id", function (req, res) {
+            fs.writeFile('./db/db.json', stringData, (err, data) => {
+                if (err) throw err;
+            });
+        });
+        res.send('Thank you for your note!');
+    });
 
+    //DELETE
+    app.delete('/api/notes/:id', function (req, res) {
+        const deleteNote = req.params.id;
+        console.log(deleteNote);
 
-    let id = req.params.id.toString();
-    console.log(id);
+        fs.readFile('./db/db.json', (err, data) => {
+            if (err) throw err;
 
-    for (i = 0; i < notesData.length; i++) {
+            dbData = JSON.parse(data);
+            for (let i = 0; i < dbData.length; i++) {
+                if (dbData[i].id === Number(deleteNote)) {
+                    dbData.splice([i], 1);
+                }
+            }
+            console.log(dbData);
+            stringData = JSON.stringify(dbData);
 
-        if (notesData[i].id == id) {
-            console.log("match!");
-            res.send(notesData[i]);
-
-            notesData.splice(i, 1);
-            break;
-        }
-    }
-
-    writeToDB(notesData);
-
-});
+            fs.writeFile('./db/db.json', stringData, (err, data) => {
+                if (err) throw err;
+            });
+        });
+        res.status(204).send();
+    });
 };
