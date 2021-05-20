@@ -32,7 +32,7 @@ LinkedIn: (https://www.linkedin.com/in//brittany-lee-6142121b8/)
  
  Github: (https://github.com/blee2013/note-taker)
 
- Deployed at: 
+ Deployed via Heroku at: https://infinite-river-49784.herokuapp.com/
  
 ![Preview ](public/assets/images/welcome.png)
 ![Preview ](public/assets/images/adding-note.png)
